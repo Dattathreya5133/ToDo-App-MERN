@@ -24,12 +24,19 @@ export default function List() {
     }
 
     const deleteTask = async (id) => {
-        let item = await fetch('http://localhost:3300/delete/' + id, { method: 'DELETE' }, credentials:'include');
-        item = await item.json()
-        if (item.success) {
-            getListData()
+    let item = await fetch(
+        'http://localhost:3300/delete/' + id,
+        {
+            method: 'DELETE'
         }
+    )
+
+    item = await item.json()
+
+    if (item.success) {
+        getListData()
     }
+}
 
     const selectAll = (event) => {
         if (event.target.checked) {
