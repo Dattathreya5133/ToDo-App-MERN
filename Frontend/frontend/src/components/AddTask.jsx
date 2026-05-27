@@ -13,9 +13,9 @@ function AddTask(){
         method:'Post',
         body:JSON.stringify(taskData),
         credentials:'include',
-        headers:{
-            'Content-Type':'Application/Json'
-        }
+       headers:{
+   authorization: localStorage.getItem("token")
+}
     })
          
      result = await result.json()

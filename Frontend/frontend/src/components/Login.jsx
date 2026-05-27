@@ -18,15 +18,16 @@ export default function Login(){
         method:'POST',
         body:JSON.stringify(userData),
         credentials:'include',
-        headers:{
-            'Content-Type':'Application/Json'
-        }
+      headers:{
+   authorization: localStorage.getItem("token")
+}
     })
          
      result = await result.json()
     if(result.success){
         console.log(result);
         document.cookie="token="+result.token,
+           localStorage.setItem("token", result.token),
         localStorage.setItem('login',userData.email),
         window.dispatchEvent(new Event('localStorage-change'))
         navigate('/')

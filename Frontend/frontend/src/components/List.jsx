@@ -69,9 +69,9 @@ export default function List() {
                 method: "DELETE",
                  credentials:'include',
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+               headers:{
+   authorization: localStorage.getItem("token")
+},
 
                 body: JSON.stringify({
                     ids: selectedTask

@@ -39,9 +39,9 @@ export default function UpdateTask() {
             {
                 method: 'PUT',
                 body: JSON.stringify(taskData),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers:{
+   authorization: localStorage.getItem("token")
+}
             }
         );
 

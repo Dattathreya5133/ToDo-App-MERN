@@ -19,19 +19,20 @@ export default function SignUp(){
         let result =await fetch ('https://todo-app-mern-hfgc.onrender.com/signup',{
         method:'POST',
         body:JSON.stringify(userData),
-        headers:{
-            'Content-Type':'Application/Json'
-        }
+       headers:{
+   authorization: localStorage.getItem("token")
+}
     })
          
      result = await result.json()
-    if(result.success){
-        console.log(result);
-        document.cookie="token="+result.token;
-         localStorage.setItem('login',userData.email),
-        navigate('/')
-        
-    }else{
+   if(result.success){
+   document.cookie="token="+result.token;
+
+   localStorage.setItem("token", result.token)   // ADD THIS
+   localStorage.setItem('login',userData.email)
+
+   navigate('/')
+}else{
         alert("try after sometime")
     }
     }
