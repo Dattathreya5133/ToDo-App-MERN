@@ -49,83 +49,160 @@ app.post("/add-task", verifyJWTToken,async (req, res) => {
 
 app.post("/signup", async (req, res) => {
 
-    const userData = req.body;
-    if (userData.name &&
-        userData.email &&
-        userData.password) {
+   try {
 
-        const db = await connection();
+      const userData = req.body;
 
-        const collection = db.collection("users");
+      if (
+         userData.name &&
+         userData.email &&
+         userData.password
+      ) {
 
-        const result = await collection.insertOne(userData);
+         const db = await connection();
 
-        if (result) {
+         const collection = db.collection("users");
+
+         const result = await collection.insertOne(userData);
+
+         if (result) {
+
             jwt.sign(
-                userData,
-                "Google",
-                { expiresIn: "10d" },
-                (error, token) => {
-                    res.send({
-                        success: true,
-                        msg: "signup done",
-                        token: token,
-                        result
-                    })
-                })
-        }
-    } else {
-        res.send({
-            message: "Error connection failed",
+               userData,
+               "Google",
+               { expiresIn: "10d" },
+
+               (error, token) => {
+
+                  if(error){
+                     return res.send({
+                        success:false,
+                        message:"Token error"
+                     })
+                  }
+
+                  res.send({
+                     success: true,
+                     msg: "signup done",
+                     token: token,
+                     result
+                  })
+               }
+            )
+
+         }
+         else {
+
+            res.send({
+               message: "Error connection failed",
+               success: false
+            })
+
+         }
+
+      } else {
+
+         res.send({
+            message: "Fill all fields",
             success: false
-        })
-    }
-});
+         })
 
+      }
 
+   }
+
+   catch (err) {
+
+      console.log("Signup error:", err)
+
+      res.status(500).send({
+         success: false,
+         message: err.message
+      })
+
+   }
+
+})
 app.post("/login", async (req, res) => {
 
-    const userData = req.body;
-    if (userData.email &&
-        userData.password) {
+   try {
 
-        const db = await connection();
+      const userData = req.body;
 
-        const collection = db.collection("users");
+      if (
+         userData.email &&
+         userData.password
+      ) {
 
-        const result = await collection.findOne({ 
+         const db = await connection();
+
+         const collection = db.collection("users");
+
+         const result = await collection.findOne({
             email: userData.email,
-             password: userData.password });
+            password: userData.password
+         });
 
-             console.log('Found User',result)
+         console.log("Found User", result);
 
-        if (result) {
+         if (result) {
+
             jwt.sign(
-                result,
-                "Google",
-                { expiresIn: "10d" },
-                (error, token) => {
-                    res.send({
-                        success: true,
-                        msg: " login done",
-                        token
-                    })
-                })
-        } else {
+               result,
+               "Google",
+               { expiresIn: "10d" },
+
+               (error, token) => {
+
+                  if(error){
+                     return res.send({
+                        success:false,
+                        message:"Token error"
+                     })
+                  }
+
+                  res.send({
+                     success: true,
+                     msg: "login done",
+                     token
+                  })
+
+               }
+            )
+
+         }
+         else {
+
             res.send({
-                message: "user not found",
-                success: false
+               message: "user not found",
+               success: false
             })
-        }
-    }
-    else {
-        res.send({
+
+         }
+
+      }
+      else {
+
+         res.send({
             message: "login failed",
             success: false
-        })
-    }
-});
+         })
 
+      }
+
+   }
+   catch(err){
+
+      console.log("Login error:", err);
+
+      res.status(500).send({
+         success:false,
+         message:err.message
+      })
+
+   }
+
+})
 
 app.delete("/delete/:id",verifyJWTToken, async (req, res) => {
 
