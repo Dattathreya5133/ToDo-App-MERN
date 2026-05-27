@@ -10,8 +10,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cors({
-    origin:'http://localhost:5173',
-    credentials:true
+   origin: "https://to-do-app-mern-f5fj-git-main-dattathreya5133s-projects.vercel.app",
+   credentials: true
 }))
 app.use(cookieParser());
 
