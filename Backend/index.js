@@ -269,9 +269,8 @@ jwt.verify(token,'Google',(error,decoded)=>{
 }
 
 
+const PORT = process.env.PORT || 3300
 
-
-
-app.listen(3300, () => {
-    console.log("Server running");
-});
+app.listen(PORT, () => {
+  console.log("Server running")
+})
