@@ -48,81 +48,47 @@ app.post("/add-task", verifyJWTToken,async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
+    try {
 
-   try {
+        const userData = req.body;
 
-      const userData = req.body;
+        if (userData.name &&
+            userData.email &&
+            userData.password) {
 
-      if (
-         userData.name &&
-         userData.email &&
-         userData.password
-      ) {
+            const db = await connection();
 
-         const db = await connection();
+            const collection = db.collection("users");
 
-         const collection = db.collection("users");
+            const result = await collection.insertOne(userData);
 
-         const result = await collection.insertOne(userData);
+            if(result){
+                jwt.sign(
+                    userData,
+                    "Google",
+                    {expiresIn:"10d"},
+                    (error,token)=>{
+                        res.send({
+                            success:true,
+                            msg:"signup done",
+                            token
+                        })
+                    }
+                )
+            }
 
-         if (result) {
+        }
 
-            jwt.sign(
-               userData,
-               "Google",
-               { expiresIn: "10d" },
-
-               (error, token) => {
-
-                  if(error){
-                     return res.send({
-                        success:false,
-                        message:"Token error"
-                     })
-                  }
-
-                  res.send({
-                     success: true,
-                     msg: "signup done",
-                     token: token,
-                     result
-                  })
-               }
-            )
-
-         }
-         else {
-
-            res.send({
-               message: "Error connection failed",
-               success: false
-            })
-
-         }
-
-      } else {
-
-         res.send({
-            message: "Fill all fields",
-            success: false
-         })
-
-      }
-
-   }
-
-   catch (err) {
-
-      console.log("Signup error:", err)
-
-      res.status(500).send({
-         success: false,
-         message: err.message
-      })
-
-   }
-
+    } catch(error){
+        console.log("SIGNUP ERROR:", error)
+        res.send({
+            success:false,
+            message:"try after sometime"
+        })
+    }
 })
+
+
 app.post("/login", async (req, res) => {
 
    try {
