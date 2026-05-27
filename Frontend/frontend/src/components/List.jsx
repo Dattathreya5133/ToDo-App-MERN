@@ -63,20 +63,21 @@ export default function List() {
 
         console.log(selectedTask)
 
-        let item = await fetch(
-            "https://todo-app-mern-hfgc.onrender.com/delete-multiple/",
-            {
-                method: "DELETE",
-                 credentials:'include',
+     let item = await fetch(
+"https://todo-app-mern-hfgc.onrender.com/delete-multiple/",
+{
+    method:"DELETE",
+    credentials:'include',
 
-               headers:{
-   authorization: localStorage.getItem("token")
-},
+    headers:{
+        authorization: localStorage.getItem("token"),
+        'Content-Type':'Application/Json'
+    },
 
-                body: JSON.stringify({
-                    ids: selectedTask
-                })
-            });
+    body:JSON.stringify({
+        ids:selectedTask
+    })
+});
 
         item = await item.json();
         if (item.success) {
