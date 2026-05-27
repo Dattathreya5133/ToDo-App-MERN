@@ -10,8 +10,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cors({
-   origin: "https://to-do-app-mern-f5fj-git-main-dattathreya5133s-projects.vercel.app",
-   credentials: true
+    origin: true,
+    credentials: true
 }))
 app.use(cookieParser());
 
@@ -254,20 +254,26 @@ app.put("/update-task/:id",verifyJWTToken, async (req, res) => {
 })
 
 
-function  verifyJWTToken(req,res,next){
+function verifyJWTToken(req,res,next){
+
 console.log("verifyJWTToken",req.cookies['token']);
-const token = req.cookies['token']
+
+const token = req.cookies['token'] || req.headers.authorization
+
 jwt.verify(token,'Google',(error,decoded)=>{
+
     if(error){
         return res.send({
             msg:'invalid token',
-            success:false})
+            success:false
+        })
     }
-     console.log(decoded)
+
+    console.log(decoded)
     next()
+
 })
 }
-
 
 const PORT = process.env.PORT || 3300
 
