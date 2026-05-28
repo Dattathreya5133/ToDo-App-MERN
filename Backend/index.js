@@ -49,8 +49,11 @@ app.post("/add-task", verifyJWTToken,async (req, res) => {
 
 app.post("/signup", async (req, res) => {
     try {
-
+         
+        console.log("Signup route started");
         const userData = req.body;
+
+       console.log("Connecting DB");
 
         if (userData.name &&
             userData.email &&
@@ -58,9 +61,12 @@ app.post("/signup", async (req, res) => {
 
             const db = await connection();
 
+        console.log("DB Connected");
+
             const collection = db.collection("users");
 
             const result = await collection.insertOne(userData);
+             console.log("Insert Result:", result);
 
             if(result){
                 jwt.sign(
@@ -80,7 +86,8 @@ app.post("/signup", async (req, res) => {
         }
 
     } catch(error){
-        console.log("SIGNUP ERROR:", error)
+        console.log("SIGNUP ERROR:");
+console.log(error);
         res.send({
             success:false,
             message:"try after sometime"
@@ -151,7 +158,7 @@ app.post("/login", async (req, res) => {
 
          res.send({
             message: "login failed",
-            success: false
+            success: falsej
          })
 
       }
