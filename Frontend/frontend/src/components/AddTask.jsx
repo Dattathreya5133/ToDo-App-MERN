@@ -12,9 +12,8 @@ function AddTask(){
         let result =await fetch ('https://todo-app-backend-ohj0.onrender.com/add-task',{
         method:'Post',
         body:JSON.stringify(taskData),
-        credentials:'include',
        headers:{
-   authorization: localStorage.getItem("token")
+   'Content-Type':'Application/Json'
 }
     })
          

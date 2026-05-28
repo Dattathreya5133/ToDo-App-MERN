@@ -40,7 +40,7 @@ export default function UpdateTask() {
                 method: 'PUT',
                 body: JSON.stringify(taskData),
                 headers:{
-   authorization: localStorage.getItem("token")
+'Content-Type':'application/json'
 }
             }
         );

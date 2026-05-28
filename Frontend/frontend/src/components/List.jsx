@@ -11,9 +11,7 @@ export default function List() {
     }, [])
 
     const getListData = async () => {
-        let list = await fetch('https://todo-app-backend-ohj0.onrender.com/tasks',{
-            credentials:'include'
-        });
+        let list = await fetch('https://todo-app-backend-ohj0.onrender.com/tasks')
         list = await list.json()
 
         if (list.success) {
@@ -67,10 +65,8 @@ export default function List() {
 "https://todo-app-backend-ohj0.onrender.com/delete-multiple/",
 {
     method:"DELETE",
-    credentials:'include',
 
     headers:{
-        authorization: localStorage.getItem("token"),
         'Content-Type':'Application/Json'
     },
 
