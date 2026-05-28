@@ -9,7 +9,7 @@ function AddTask(){
    async function handleAddTask(){
         console.log(taskData);
 
-        let result =await fetch ('https://todo-app-mern-hfgc.onrender.com/add-task',{
+        let result =await fetch ('https://todo-app-backend-ohj0.onrender.com/add-task',{
         method:'Post',
         body:JSON.stringify(taskData),
         credentials:'include',
