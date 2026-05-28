@@ -2,24 +2,18 @@ import express from "express";
 import { collectionName, connection } from "./dbconfig.js";
 import cors from 'cors'
 import { ObjectId } from "mongodb";
-import jwt from 'jsonwebtoken';
-import cookieParser from "cookie-parser";
 
 
 const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
-app.use(cors({
-    origin: true,
-    credentials: true
-}))
-app.use(cookieParser());
+app.use(cors())
 
 app.get("/", (req, res) => {
     res.send("API running");
 });
 
-app.post("/add-task", verifyJWTToken,async (req, res) => {
+app.post("/add-task",async (req, res) => {
 
     console.log(req.body);
 
@@ -47,137 +41,9 @@ app.post("/add-task", verifyJWTToken,async (req, res) => {
     }
 });
 
-app.post("/signup", async (req, res) => {
-    try {
-         
-        console.log("Signup route started");
-        const userData = req.body;
-
-       console.log("Connecting DB");
-
-        if (userData.name &&
-            userData.email &&
-            userData.password) {
-
-            const db = await connection();
-
-        console.log("DB Connected");
-
-            const collection = db.collection("users");
-
-            const result = await collection.insertOne(userData);
-             console.log("Insert Result:", result);
-
-            if(result){
-                jwt.sign(
-                    userData,
-                    "Google",
-                    {expiresIn:"10d"},
-                    (error,token)=>{
-                        res.send({
-                            success:true,
-                            msg:"signup done",
-                            token
-                        })
-                    }
-                )
-            }
-
-        }
-
-    } catch(error){
-        console.log("SIGNUP ERROR:");
-console.log(error);
-        res.send({
-            success:false,
-            message:"try after sometime"
-        })
-    }
-})
 
 
-app.post("/login", async (req, res) => {
-
-   try {
-
-      const userData = req.body;
-
-      if (
-         userData.email &&
-         userData.password
-      ) {
-
-         const db = await connection();
-
-         const collection = db.collection("users");
-
-         const result = await collection.findOne({
-            email: userData.email,
-            password: userData.password
-         });
-
-         console.log("Found User", result);
-
-         if (result) {
-
-            jwt.sign(
-               result,
-               "Google",
-               { expiresIn: "10d" },
-
-               (error, token) => {
-
-                  if(error){
-                     return res.send({
-                        success:false,
-                        message:"Token error"
-                     })
-                  }
-
-                  res.send({
-                     success: true,
-                     msg: "login done",
-                     token
-                  })
-
-               }
-            )
-
-         }
-         else {
-
-            res.send({
-               message: "user not found",
-               success: false
-            })
-
-         }
-
-      }
-      else {
-
-         res.send({
-            message: "login failed",
-            success: falsej
-         })
-
-      }
-
-   }
-   catch(err){
-
-      console.log("Login error:", err);
-
-      res.status(500).send({
-         success:false,
-         message:err.message
-      })
-
-   }
-
-})
-
-app.delete("/delete/:id",verifyJWTToken, async (req, res) => {
+app.delete("/delete/:id", async (req, res) => {
 
     console.log(req.body);
 
@@ -199,10 +65,7 @@ app.delete("/delete/:id",verifyJWTToken, async (req, res) => {
     }
 });
 
-
-
-
-app.delete("/delete-multiple",verifyJWTToken, async (req, res) => {
+app.delete("/delete-multiple", async (req, res) => {
 
     console.log(req.body)
 
@@ -229,9 +92,7 @@ app.delete("/delete-multiple",verifyJWTToken, async (req, res) => {
     }
 })
 
-
-
-app.get("/task/:id",verifyJWTToken, async (req, res) => {
+app.get("/task/:id", async (req, res) => {
 
     const id = req.params.id
 
@@ -251,10 +112,7 @@ app.get("/task/:id",verifyJWTToken, async (req, res) => {
     }
 });
 
-
-app.get("/tasks",verifyJWTToken, async (req, res) => {
-
-    console.log("cookies test",req.cookies['token']);
+app.get("/tasks",async (req, res) => {
 
     const db = await connection();
 
@@ -272,7 +130,7 @@ app.get("/tasks",verifyJWTToken, async (req, res) => {
     }
 });
 
-app.put("/update-task/:id",verifyJWTToken, async (req, res) => {
+app.put("/update-task/:id", async (req, res) => {
 
     const { id } = req.params
     const { _id, ...fields } = req.body
@@ -300,30 +158,8 @@ app.put("/update-task/:id",verifyJWTToken, async (req, res) => {
             success: false
         })
     }
-
 })
 
-
-function verifyJWTToken(req,res,next){
-
-console.log("verifyJWTToken",req.cookies['token']);
-
-const token = req.cookies['token'] || req.headers.authorization
-
-jwt.verify(token,'Google',(error,decoded)=>{
-
-    if(error){
-        return res.send({
-            msg:'invalid token',
-            success:false
-        })
-    }
-
-    console.log(decoded)
-    next()
-
-})
-}
 
 const PORT = process.env.PORT || 3300
 
