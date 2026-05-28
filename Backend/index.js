@@ -31,14 +31,7 @@ app.post("/add-task",async (req, res) => {
             success: true,
             result
         });
-        res.send(error.message);
-    } else {
-        res.send({
-            message: "Task not added",
-            success: false,
-            result
-        })
-    }
+      
 });
 
 
