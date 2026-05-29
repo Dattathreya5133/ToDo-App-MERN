@@ -1,13 +1,23 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import { MongoClient } from "mongodb";
 
-const url = "mongodb+srv://RamaKrishna:RamaKrishna151%40@todo-mern.ul41zty.mongodb.net/?appName=ToDo-MERN"
-const dbName = 'Todo-mern';
-const collectionName = 'todolist'
-const client = new MongoClient(url)
-const connection = async ()=>{
-    const connect = await 
-    client.connect();
-    return connect.db(dbName)
-}
+const url = process.env.MONGO_URL;
+console.log("MONGO_URL =",process.env.MONGO_URL)
+const client = new MongoClient(url);
 
-export {connection,collectionName};
+const dbName = "Todo-mern";
+const collectionName = "todolist";
+
+const connection = async () => {
+  try {
+    await client.connect();
+
+    return client.db(dbName);
+
+  } catch (error) {
+    console.error("Mongo error",error);
+  }
+};
+
+export { connection, collectionName };

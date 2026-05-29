@@ -1,35 +1,48 @@
 import express from "express";
-import { collectionName, connection } from "./dbconfig.js";
 import cors from 'cors'
+import { collectionName, connection } from "./dbconfig.js";
 import { ObjectId } from "mongodb";
+import dotenv from 'dotenv';
 
-
+console.log("BEFORE CONNECTION")
+connection()
+console.log("AFTER CONNECTION")
 const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cors())
+dotenv.config();
 
+console.log("SERVER RUNNING")
 app.get("/", (req, res) => {
     res.send("API running");
 });
 
-app.post("/add-task",async (req, res) => {
+app.post('/add-task', async (req, res) => {
 
-    console.log(req.body);
+    try {
 
-    const db = await connection();
+        console.log(req.body);
 
-    const collection = await
-        db.collection(collectionName);
+        const db = await connection();
 
-    const result = await
-        collection.insertOne(req.body);
+        const collection = db.collection(collectionName);
 
-    if (result) {
+        const result = await collection.insertOne(req.body);
+
         res.send({
             message: "New Task Added",
             success: true,
-            result
+            result: result
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        res.status(500).send({
+            success: false,
+            message: "Server Error"
         });
     }
 });
@@ -153,9 +166,8 @@ app.put("/update-task/:id", async (req, res) => {
     }
 })
 
-
-const PORT = process.env.PORT || 3300
+const PORT = process.env.PORT || 3300;
 
 app.listen(PORT, () => {
-  console.log("Server running")
-})
+  console.log("Server Running");
+});

@@ -11,7 +11,7 @@ export default function List() {
     }, [])
 
     const getListData = async () => {
-        let list = await fetch('https://todo-app-backend-ohj0.onrender.com/tasks')
+        let list = await fetch('http://localhost:3300/tasks')
         list = await list.json()
 
         if (list.success) {
@@ -23,7 +23,7 @@ export default function List() {
 
     const deleteTask = async (id) => {
     let item = await fetch(
-        'https://todo-app-backend-ohj0.onrender.com/delete/' + id,
+        'http://localhost:3300//delete/' + id,
         {
             method: 'DELETE'
         }
@@ -62,12 +62,12 @@ export default function List() {
         console.log(selectedTask)
 
      let item = await fetch(
-"https://todo-app-backend-ohj0.onrender.com/delete-multiple/",
+"http://localhost:3300/delete-multiple/",
 {
     method:"DELETE",
 
     headers:{
-        'Content-Type':'Application/Json'
+        'Content-Type':'application/json'
     },
 
     body:JSON.stringify({
