@@ -20,7 +20,7 @@ export default function UpdateTask() {
     const getTask = async () => {
 
         let task = await fetch(
-            'http://localhost:3300/task/' + id
+            'https://todo-app-mern-back1.onrender.com/task/' + id
         );
 
         task = await task.json();
@@ -35,7 +35,7 @@ export default function UpdateTask() {
         console.log("function called", taskData);
 
         let task = await fetch(
-            'http://localhost:3300/update-task/' + id,
+            'https://todo-app-mern-back1.onrender.com/update-task/' + id,
             {
                 method: 'PUT',
                 body: JSON.stringify(taskData),
