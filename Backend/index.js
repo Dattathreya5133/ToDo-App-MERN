@@ -3,6 +3,7 @@ import cors from 'cors'
 import { collectionName, connection } from "./dbconfig.js";
 import { ObjectId } from "mongodb";
 import dotenv from 'dotenv';
+dotenv.config();
 
 console.log("BEFORE CONNECTION")
 connection()
@@ -11,7 +12,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cors())
-dotenv.config();
+
 
 console.log("SERVER RUNNING")
 app.get("/", (req, res) => {
